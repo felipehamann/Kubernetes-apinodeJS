@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-api-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nodejs-api
+  template:
+    metadata:
+      labels:
+        app: nodejs-api
+    spec:
+      containers:
+      - name: nodejs
+        image: felipehamann/app2:latest  # Asegúrate de reemplazar esto con el nombre y etiqueta correctos de tu imagen
+        ports:
+        - containerPort: 3000  # Cambia este puerto si tu API utiliza un puerto diferente
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-api-service
+spec:
+  type: NodePort  # Cambia a LoadBalancer si es para un entorno de producción en la nube
+  ports:
+  - port: 80
+    targetPort: 3000
+    protocol: TCP
+  selector:
+    app: nodejs-api
